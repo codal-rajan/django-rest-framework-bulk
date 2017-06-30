@@ -52,7 +52,8 @@ generic views (and mixins)::
 
     from rest_framework_bulk.generics import ListBulkCreateUpdateDestroyAPIView
     
-    # **serializer.py**
+    serializer.py
+    -------------
 
     class FooSerializer(BulkSerializerMixin, ModelSerializer):
         class Meta(object):
@@ -61,14 +62,16 @@ generic views (and mixins)::
             fields = '__all__'
             list_serializer_class = BulkListSerializer
 
-    # **views.py**
+    views.py
+    --------
 
     class FooViewSet(ListBulkCreateUpdateDestroyAPIView):
         queryset = FooModel.objects.all()
         serializer_class = FooSerializer
 
 
-    # **urls.py**
+    urls.py
+    -------
 
     from rest_framework import routers
     from .views import UserViewSet , FooViewSet
