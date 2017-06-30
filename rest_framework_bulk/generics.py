@@ -1,7 +1,7 @@
 from __future__ import unicode_literals, print_function
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet , GenericViewSet
 
 from . import mixins as bulk_mixins
 
@@ -26,13 +26,13 @@ __all__ = [
 # ################################################## #
 
 class BulkCreateAPIView(bulk_mixins.BulkCreateModelMixin,
-                        GenericAPIView):
+                        GenericViewSet):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
 
 class BulkUpdateAPIView(bulk_mixins.BulkUpdateModelMixin,
-                        GenericAPIView):
+                        GenericViewSet):
     def put(self, request, *args, **kwargs):
         return self.bulk_update(request, *args, **kwargs)
 
@@ -41,14 +41,14 @@ class BulkUpdateAPIView(bulk_mixins.BulkUpdateModelMixin,
 
 
 class BulkDestroyAPIView(bulk_mixins.BulkDestroyModelMixin,
-                         GenericAPIView):
+                         GenericViewSet):
     def delete(self, request, *args, **kwargs):
         return self.bulk_destroy(request, *args, **kwargs)
 
 
 class ListBulkCreateAPIView(mixins.ListModelMixin,
                             bulk_mixins.BulkCreateModelMixin,
-                            GenericAPIView):
+                            GenericViewSet):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
@@ -59,7 +59,7 @@ class ListBulkCreateAPIView(mixins.ListModelMixin,
 class ListCreateBulkUpdateAPIView(mixins.ListModelMixin,
                                   mixins.CreateModelMixin,
                                   bulk_mixins.BulkUpdateModelMixin,
-                                  GenericAPIView):
+                                  GenericViewSet):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
@@ -77,7 +77,7 @@ class ListCreateBulkUpdateDestroyAPIView(mixins.ListModelMixin,
                                          mixins.CreateModelMixin,
                                          bulk_mixins.BulkUpdateModelMixin,
                                          bulk_mixins.BulkDestroyModelMixin,
-                                         GenericAPIView):
+                                         GenericViewSet):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
@@ -97,7 +97,7 @@ class ListCreateBulkUpdateDestroyAPIView(mixins.ListModelMixin,
 class ListBulkCreateUpdateAPIView(mixins.ListModelMixin,
                                   bulk_mixins.BulkCreateModelMixin,
                                   bulk_mixins.BulkUpdateModelMixin,
-                                  GenericAPIView):
+                                  GenericViewSet):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
@@ -114,7 +114,7 @@ class ListBulkCreateUpdateAPIView(mixins.ListModelMixin,
 class ListBulkCreateDestroyAPIView(mixins.ListModelMixin,
                                    bulk_mixins.BulkCreateModelMixin,
                                    bulk_mixins.BulkDestroyModelMixin,
-                                   GenericAPIView):
+                                   GenericViewSet):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
@@ -129,7 +129,7 @@ class ListBulkCreateUpdateDestroyAPIView(mixins.ListModelMixin,
                                          bulk_mixins.BulkCreateModelMixin,
                                          bulk_mixins.BulkUpdateModelMixin,
                                          bulk_mixins.BulkDestroyModelMixin,
-                                         GenericAPIView):
+                                         GenericViewSet):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
