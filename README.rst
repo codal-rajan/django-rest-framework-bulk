@@ -41,24 +41,56 @@ or from source code::
 Example
 -------
 
-The bulk views (and mixins) are very similar to Django REST Framework's own
-generic views (and mixins)::
+The bulk views (and mixins) are very similar to Django REST Framework's own generic views (and mixins):
 
-    from rest_framework_bulk import (
-        BulkListSerializer,
-        BulkSerializerMixin,
-        ListBulkCreateUpdateDestroyAPIView,
-    )
 
-    class FooSerializer(BulkSerializerMixin, ModelSerializer):
-        class Meta(object):
-            model = FooModel
-            # only necessary in DRF3
-            list_serializer_class = BulkListSerializer
+Model.py
+------
 
-    class FooView(ListBulkCreateUpdateDestroyAPIView):
-        queryset = FooModel.objects.all()
-        serializer_class = FooSerializer
+class FooModel(models.Model):
+    name = models.CharField(max_length=32)
+
+Serializer.py
+------
+
+from rest_framework_bulk.drf3.serializers import BulkSerializerMixin , BulkListSerializer
+class FooSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    class Meta(object):
+        model = FooModel
+        list_serializer_class = BulkListSerializer
+        fields = '__all__'
+
+urls.py ( In-app url )
+------
+
+from rest_framework import routers
+from .views import UserViewSet , FooViewSet
+from rest_framework_bulk.routes import BulkRouter
+
+
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+
+router2 = BulkRouter()
+router2.register(r'foo', FooViewSet)
+
+urlpatterns = []
+urlpatterns += router.urls
+urlpatterns += router2.urls
+
+
+views.py
+------
+
+from rest_framework_bulk.generics import ListBulkCreateUpdateDestroyAPIView
+from .models import FooModel
+from .serializers import FooSerializer
+
+class FooViewSet(ListBulkCreateUpdateDestroyAPIView):
+    queryset = FooModel.objects.all()
+    serializer_class = FooSerializer
+    permission_classes = (UserPermission,)
+
 
 The above will allow to create the following queries
 
@@ -96,21 +128,6 @@ The above will allow to create the following queries
     # delete queryset (see notes)
     DELETE
 
-Router
-------
-
-The bulk router can automatically map the bulk actions::
-
-    from rest_framework_bulk.routes import BulkRouter
-
-    class UserViewSet(BulkModelViewSet):
-        model = User
-
-        def allow_bulk_destroy(self, qs, filtered):
-            """Don't forget to fine-grain this method"""
-
-    router = BulkRouter()
-    router.register(r'users', UserViewSet)
 
 DRF3
 ----
